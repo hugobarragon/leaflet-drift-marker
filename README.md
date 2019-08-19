@@ -3,6 +3,8 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=plastic)](http://opensource.org/licenses/MIT)
 [![npm version](https://img.shields.io/badge/npm-v1.0.0-green.svg?style=plastic)](https://www.npmjs.com/package/leaflet-drift-marker)
 
+[![Edit react-leaflet_DriftMarker](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/react-leaflet-fm1r3?fontsize=14)
+
 Support        | Tested | |     
 -------------- | ------ |-------| 
 `leaflet`      | 1.5.1  |&#9745;|
