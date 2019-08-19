@@ -17,7 +17,6 @@ type Props = {
 class DriftMarker extends MapLayer<Props, LeafletElement> {
   createLeafletElement(props: Props): LeafletElement {
     const el = new Sliding_Marker(props.position, this.getOptions(props))
-    console.log("sippir",this.props)
     this.contextValue = { ...props.leaflet, popupContainer: el }
     return el
   }

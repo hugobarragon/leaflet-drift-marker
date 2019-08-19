@@ -5,7 +5,7 @@
 
 [![Edit react-leaflet_DriftMarker](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/react-leaflet-fm1r3?fontsize=14)
 
-Support        | Tested | |     
+Support        | Tested |       |     
 -------------- | ------ |-------| 
 `leaflet`      | 1.5.1  |&#9745;|
 `react-leaflet`| 2.4.0  |&#9745;|
