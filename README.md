@@ -9,9 +9,6 @@ Support        | Tested | |
 `react-leaflet`| 2.4.0  |&#9745;|
 * will be tested in lower versions
 
-
-!["IMG"](https://github.com/hugobarragon/leaflet-drift-marker/blob/master/docs/drift_marker.gif "example")  
-
 !["IMG"](./docs/drift_marker.gif "example")
 
 A plugin for leaflet and react-leaflet, that allows a marker to move smoothly instead of jump to a new position. Reworked to typescript from [Leaflet.Marker.SlideTo!](https://gitlab.com/IvanSanchez/Leaflet.Marker.SlideTo)
