@@ -1,8 +1,7 @@
-import React from "react"
+import DriftMarker from "./SlidingMarker/SlidingMarker";
+import Drift_Marker from "./SlidingMarker/Sliding_Marker";
 
-const Test: React.FC<{ text: String }> = (props) => {
-
-    return <div>{props.text}</div>
-};
-
-export default Test
+export {
+  DriftMarker, // marker react-leaflet class component
+  Drift_Marker, // marker pure class
+}

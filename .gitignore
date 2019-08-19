@@ -8,3 +8,4 @@ public/index.html
 # IDE
 .alm
 .vscode
+package-lock.json
