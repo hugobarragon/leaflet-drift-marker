@@ -1,13 +1,13 @@
 {
-  "name": "react-leaflet-drift-marker",
+  "name": "leaflet-drift-marker",
   "version": "1.0.0",
   "private": false,
-  "description": "Just a marker that can drift its way to a new position, to use with react-leaflet",
+  "description": "Just a marker that can drift its way to a new position, to use with react-leaflet,leaflet...",
   "main": "lib/index.js",
   "types": "lib",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hugobarragon/react-leaflet-drift-marker.git"
+    "url": "git+https://github.com/hugobarragon/leaflet-drift-marker.git"
   },
   "keywords": [
     "react",
@@ -15,9 +15,11 @@
     "react leaflet",
     "marker",
     "leaflet",
+    "leaflet-marker",
     "map",
     "leaflet marker",
     "react-leaflet-marker",
+    "react-leaflet-moving-marker",
     "leaflet-moving-marker",
     "leaflet sliding marker",
     "react-component"
@@ -26,9 +28,9 @@
   "contributors": [],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hugobarragon/react-leaflet-drift-marker/issues"
+    "url": "https://github.com/hugobarragon/leaflet-drift-marker/issues"
   },
-  "homepage": "https://github.com/hugobarragon/react-leaflet-drift-marker#readme",
+  "homepage": "https://github.com/hugobarragon/leaflet-drift-marker#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p ."
