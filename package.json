@@ -1,6 +1,6 @@
 {
   "name": "leaflet-drift-marker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "description": "Just a marker that can drift its way to a new position, to use with react-leaflet,leaflet...",
   "main": "lib/index.js",
