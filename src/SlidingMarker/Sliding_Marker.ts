@@ -1,11 +1,25 @@
-import { Marker as LeafletMarker, Util, LatLngExpression } from 'leaflet'
+import { Marker as LeafletMarker, LatLngExpression } from 'leaflet'
+// constructor type 
+type ConstMarker = new (...args: any[]) => LeafletMarker;
+// needed leaflet type
+type LeafletType = {
+    Marker: ConstMarker,
+    Util: any
+}
+declare global {
+    interface Window {
+        L: LeafletType
+    }
+}
+
+let Leaflet_module = window.L ? window.L : require("leaflet") as LeafletType
 
 type slideOptions = {
     duration: number
     keepAtCenter?: boolean
 }
 
-class SlidingMarker extends LeafletMarker {
+class SlidingMarker extends Leaflet_module.Marker {
 
     private _slideToUntil = 0
     private _slideToDuration = 1000
@@ -51,7 +65,7 @@ class SlidingMarker extends LeafletMarker {
     // 🍂method slideCancel(): this
     // Cancels the sliding animation from `slideTo`, if applicable.
     slideCancel() {
-        Util.cancelAnimFrame(this._slideFrame);
+        Leaflet_module.Util.cancelAnimFrame(this._slideFrame);
     }
 
     private _slideTo = () => {
@@ -86,7 +100,7 @@ class SlidingMarker extends LeafletMarker {
             this._map.panTo(currLatLng, { animate: false })
         }
 
-        this._slideFrame = Util.requestAnimFrame(this._slideTo, this);
+        this._slideFrame = Leaflet_module.Util.requestAnimFrame(this._slideTo, this);
     }
 
 }
