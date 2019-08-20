@@ -1,6 +1,5 @@
 import React from 'react'
-// @ts-ignore
-import Sliding_Marker from "./Sliding_Marker.js" 
+import Sliding_Marker from "./Sliding_Marker" 
 import { Icon, DivIcon, LatLngExpression } from 'leaflet'
 import { LeafletProvider, MapLayer, MapLayerProps,withLeaflet } from 'react-leaflet'
 

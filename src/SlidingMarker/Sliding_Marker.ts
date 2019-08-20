@@ -1,23 +1,25 @@
-// tslint:disable
 import { Marker as LeafletMarker, LatLngExpression } from 'leaflet'
-
+// constructor type 
+type ConstMarker = new (...args: any[]) => LeafletMarker;
+// needed leaflet type
+type LeafletType = {
+    Marker: ConstMarker,
+    Util: any
+}
 declare global {
     interface Window {
-        L: {
-            Marker: LeafletMarker,
-            Util: any
-        }
+        L: LeafletType
     }
 }
-let Leaflet_module_marker: LeafletMarker = window.L ? window.L.Marker as LeafletMarker : require("leaflet").Marker as LeafletMarker,
-    Leaflet_module_util = window.L ? window.L.Util : require("leaflet").Util
+
+let Leaflet_module = window.L ? window.L : require("leaflet") as LeafletType
 
 type slideOptions = {
     duration: number
     keepAtCenter?: boolean
 }
 
-class SlidingMarker extends Leaflet_module_marker {
+class SlidingMarker extends Leaflet_module.Marker {
 
     private _slideToUntil = 0
     private _slideToDuration = 1000
@@ -63,7 +65,7 @@ class SlidingMarker extends Leaflet_module_marker {
     // 🍂method slideCancel(): this
     // Cancels the sliding animation from `slideTo`, if applicable.
     slideCancel() {
-        Leaflet_module_util.cancelAnimFrame(this._slideFrame);
+        Leaflet_module.Util.cancelAnimFrame(this._slideFrame);
     }
 
     private _slideTo = () => {
@@ -98,7 +100,7 @@ class SlidingMarker extends Leaflet_module_marker {
             this._map.panTo(currLatLng, { animate: false })
         }
 
-        this._slideFrame = Leaflet_module_util.requestAnimFrame(this._slideTo, this);
+        this._slideFrame = Leaflet_module.Util.requestAnimFrame(this._slideTo, this);
     }
 
 }
