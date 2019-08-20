@@ -1,9 +1,9 @@
 import React from 'react'
-import Sliding_Marker from "./Sliding_Marker" 
+import Drift_Marker from "./Drift_Marker" 
 import { Icon, DivIcon, LatLngExpression } from 'leaflet'
 import { LeafletProvider, MapLayer, MapLayerProps,withLeaflet } from 'react-leaflet'
 
-type LeafletElement = Sliding_Marker
+type LeafletElement = Drift_Marker
 type Props = {
   icon?: Icon | DivIcon,
   draggable?: boolean,
@@ -16,7 +16,7 @@ type Props = {
 
 class DriftMarker extends MapLayer<Props, LeafletElement> {
   createLeafletElement(props: Props): LeafletElement {
-    const el = new Sliding_Marker(props.position, this.getOptions(props))
+    const el = new Drift_Marker(props.position, this.getOptions(props))
     this.contextValue = { ...props.leaflet, popupContainer: el }
     return el
   }

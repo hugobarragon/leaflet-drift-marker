@@ -1,7 +1,7 @@
 # leaflet-drift-marker
 
 [![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=plastic)](http://opensource.org/licenses/MIT)
-[![npm version](https://img.shields.io/badge/npm-v1.0.2-green.svg?style=plastic)](https://www.npmjs.com/package/leaflet-drift-marker)
+[![npm version](https://img.shields.io/badge/npm-v1.0.3-green.svg?style=plastic)](https://www.npmjs.com/package/leaflet-drift-marker)
 
 
 Support        | Tested |       |     
@@ -40,7 +40,7 @@ npm install --save leaflet react-leaflet
 You can get the build file Drift_marker.js from releases or :  
 
 ```html
-<script src='https://unpkg.com/leaflet-drift-marker@1.0.2/lib/SlidingMarker/Sliding_Marker.js'></script>
+<script src='https://unpkg.com/leaflet-drift-marker@1.0.3/lib/DriftMarker/Drift_Marker.js'></script>
 ```
 
 Still supports all existing leaflet marker properties [check marker](https://leafletjs.com/reference-1.5.0.html#marker)

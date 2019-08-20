@@ -8,6 +8,7 @@ type LeafletType = {
 }
 declare global {
     interface Window {
+        Drift_Marker:any
         L: LeafletType
     }
 }
@@ -19,7 +20,7 @@ type slideOptions = {
     keepAtCenter?: boolean
 }
 
-class SlidingMarker extends Leaflet_module.Marker {
+class Drift_Marker extends Leaflet_module.Marker {
 
     private _slideToUntil = 0
     private _slideToDuration = 1000
@@ -105,4 +106,6 @@ class SlidingMarker extends Leaflet_module.Marker {
 
 }
 
-export default SlidingMarker
+window.Drift_Marker=Drift_Marker
+
+export default Drift_Marker

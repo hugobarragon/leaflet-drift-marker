@@ -1,5 +1,5 @@
-import DriftMarker from "./SlidingMarker/SlidingMarker";
-import Drift_Marker from "./SlidingMarker/Sliding_Marker";
+import DriftMarker from "./DriftMarker/DriftMarker";
+import Drift_Marker from "./DriftMarker/Drift_Marker";
 
 export {
   DriftMarker, // marker react-leaflet class component
