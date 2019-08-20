@@ -22,7 +22,9 @@
     "leaflet moving marker",
     "leaflet sliding marker",
     "sliding marker",
-    "react-component"
+    "leaflet-drift-marker",
+    "drift marker",
+    "drift-marker"
   ],
   "author": "Hugo Barragon (http://github.com/hugobarragon)",
   "contributors": [],

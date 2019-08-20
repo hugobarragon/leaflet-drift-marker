@@ -3,7 +3,6 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=plastic)](http://opensource.org/licenses/MIT)
 [![npm version](https://img.shields.io/badge/npm-v1.0.0-green.svg?style=plastic)](https://www.npmjs.com/package/leaflet-drift-marker)
 
-[![Edit react-leaflet_DriftMarker](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/react-leaflet-fm1r3?fontsize=14)
 
 Support        | Tested |       |     
 -------------- | ------ |-------| 
@@ -36,6 +35,10 @@ npm install --save leaflet react-leaflet
 
 ### Leaflet
 
+[![Edit leaflet_Drift_marker](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/leafletdriftmarker-qemry?fontsize=14)
+
+You can get the build file Drift_marker.js from releases
+
 Still supports all existing leaflet marker properties [check marker](https://leafletjs.com/reference-1.5.0.html#marker)
 
 This plugin implements two new methods:  
@@ -63,6 +66,8 @@ marker.slideTo(	[20, 20], {
 ```
 
 ### react-leaflet
+
+[![Edit react-leaflet_DriftMarker](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/react-leaflet-fm1r3?fontsize=14)
 
 Still supports all existing props from react-leaflet marker [check component](https://react-leaflet.js.org/docs/en/components#marker)
 
