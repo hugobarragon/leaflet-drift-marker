@@ -1,11 +1,23 @@
-import { Marker as LeafletMarker, Util, LatLngExpression } from 'leaflet'
+// tslint:disable
+import { Marker as LeafletMarker, LatLngExpression } from 'leaflet'
+
+declare global {
+    interface Window {
+        L: {
+            Marker: LeafletMarker,
+            Util: any
+        }
+    }
+}
+let Leaflet_module_marker: LeafletMarker = window.L ? window.L.Marker as LeafletMarker : require("leaflet").Marker as LeafletMarker,
+    Leaflet_module_util = window.L ? window.L.Util : require("leaflet").Util
 
 type slideOptions = {
     duration: number
     keepAtCenter?: boolean
 }
 
-class SlidingMarker extends LeafletMarker {
+class SlidingMarker extends Leaflet_module_marker {
 
     private _slideToUntil = 0
     private _slideToDuration = 1000
@@ -51,7 +63,7 @@ class SlidingMarker extends LeafletMarker {
     // 🍂method slideCancel(): this
     // Cancels the sliding animation from `slideTo`, if applicable.
     slideCancel() {
-        Util.cancelAnimFrame(this._slideFrame);
+        Leaflet_module_util.cancelAnimFrame(this._slideFrame);
     }
 
     private _slideTo = () => {
@@ -86,7 +98,7 @@ class SlidingMarker extends LeafletMarker {
             this._map.panTo(currLatLng, { animate: false })
         }
 
-        this._slideFrame = Util.requestAnimFrame(this._slideTo, this);
+        this._slideFrame = Leaflet_module_util.requestAnimFrame(this._slideTo, this);
     }
 
 }
