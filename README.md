@@ -40,6 +40,12 @@ npm install --save leaflet react-leaflet
 You can get the build file Drift_marker.js from releases or :  
 
 ```html
+<script><!-- will be fixed on next release -->
+    <!-- Include this script if exports does not exists on window or -->
+    <!-- the following error "ReferenceError: exports is not defined" -->
+    <!-- before the cdn import -->
+        var exports = {};
+</script>
 <script src='https://unpkg.com/leaflet-drift-marker@1.0.3/lib/DriftMarker/Drift_Marker.js'></script>
 ```
 

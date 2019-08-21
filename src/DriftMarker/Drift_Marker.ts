@@ -1,3 +1,8 @@
+if (typeof window.exports != 'object') {
+    //cdn usage on browsers without "exports" variable
+    window.exports = {}
+}
+
 import { Marker as LeafletMarker, LatLngExpression } from 'leaflet'
 // constructor type 
 type ConstMarker = new (...args: any[]) => LeafletMarker;
@@ -8,7 +13,8 @@ type LeafletType = {
 }
 declare global {
     interface Window {
-        Drift_Marker:any
+        Drift_Marker: any,
+        exports: Object,
         L: LeafletType
     }
 }
@@ -106,6 +112,6 @@ class Drift_Marker extends Leaflet_module.Marker {
 
 }
 
-window.Drift_Marker=Drift_Marker
+window.Drift_Marker = Drift_Marker
 
 export default Drift_Marker
