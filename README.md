@@ -14,7 +14,7 @@ Support        | Tested |       |
 
 A plugin for leaflet and react-leaflet, that allows a marker to move smoothly instead of jump to a new position. Reworked to typescript from [Leaflet.Marker.SlideTo!](https://gitlab.com/IvanSanchez/Leaflet.Marker.SlideTo)
 
-
+### For more performance use canvas or webgl options!!
 
 ## Installation
 
