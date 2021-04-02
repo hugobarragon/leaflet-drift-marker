@@ -9,7 +9,7 @@
 | --------- | ------ | ------- |
 | `leaflet` | 1.5.1  | &#9745; |
 
-!["IMG"](./docs/drift_marker.gif "example")
+!["IMG"](./docs/driftmarker.gif "example")
 
 A plugin for leaflet in Typescript to use on react,vue... that allows a marker to move smoothly instead of jump to a new position. Reworked to typescript from [Leaflet.Marker.SlideTo!](https://gitlab.com/IvanSanchez/Leaflet.Marker.SlideTo)
 
@@ -23,10 +23,10 @@ A plugin for leaflet in Typescript to use on react,vue... that allows a marker t
 npm install --save leaflet-drift-marker
 ```
 
-`leaflet-drift-marker` requires `leaflet` as [`peerDependency`](https://docs.npmjs.com/files/package.json#peerdependencies)
+`leaflet-drift-marker` requires only `leaflet` as [`peerDependency`](https://docs.npmjs.com/files/package.json#peerdependencies)
 
 ```bash
-npm install --save leaflet react-leaflet
+npm install --save leaflet
 ```
 
 ## Usage
@@ -45,7 +45,7 @@ You can get the build file DriftMarker.js from releases or :
   <!-- before the cdn import -->
   var exports = {};
 </script>
-<script src="https://unpkg.com/leaflet-drift-marker@2.0.0/lib/DriftMarker/index.js"></script>
+<script src="https://unpkg.com/leaflet-drift-marker@2.0.0/lib/index.js"></script>
 ```
 
 Still supports all existing leaflet marker properties [check marker](https://leafletjs.com/reference-1.5.0.html#marker)
