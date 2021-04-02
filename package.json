@@ -1,8 +1,8 @@
 {
   "name": "leaflet-drift-marker",
-  "version": "1.0.3",
+  "version": "2.0.0-rc1",
   "private": false,
-  "description": "Just a marker that can drift its way to a new position, to use with react-leaflet,leaflet...",
+  "description": "Just a marker that can drift its way to a new position, to use with leaflet, and base on Typescript for react,vue...",
   "main": "lib/index.js",
   "types": "lib",
   "repository": {
@@ -11,18 +11,15 @@
   },
   "keywords": [
     "leaflet",
-    "react-leaflet",
-    "react leaflet",
     "marker",
     "react",
     "leaflet marker",
-    "react leaflet marker",
-    "react leaflet moving marker",
     "leaflet-moving-marker",
     "leaflet moving marker",
     "leaflet sliding marker",
     "sliding marker",
     "leaflet-drift-marker",
+    "leaflet drift marker",
     "drift marker",
     "drift-marker"
   ],
@@ -38,15 +35,13 @@
     "build": "tsc -p ."
   },
   "devDependencies": {
+    "@types/leaflet": "^1.7.0",
     "@types/node": "^12.7.2",
-    "@types/react": "^16.9.1",
-    "@types/react-leaflet": "^2.4.0",
+    "leaflet": "^1.7.1",
     "typescript": "^3.5.3"
   },
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "leaflet": ">=1.2.0",
-    "react-leaflet": ">=2"
+    "leaflet": ">=1.2.0"
   },
   "dependencies": {}
 }
