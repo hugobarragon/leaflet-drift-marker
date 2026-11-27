@@ -40,10 +40,13 @@ Run `lint`, `typecheck`, `test` and `build` before calling a change done; CI run
 - Bug fixes start with a failing test in `src/index.test.ts`.
 - Leaflet internals (`_map`) are accessed through the `MarkerInternals` cast in `src/index.ts`; keep that the only place.
 - Private slide state is prefixed `_slide` to avoid clashing with `L.Marker` internals.
+- Importing the module must not touch `window` or other globals; `package.json` declares `"sideEffects": false`.
+- Leaflet 1.9 has no `module` field, so bundlers load its UMD build; browsers without a bundler load `dist/leaflet-src.esm.js` through an import map.
+- After changing exports or the build, check the README's browser page: serve it locally with `leaflet-drift-marker` in the import map pointing at `dist/index.js`, and confirm the marker slides.
 - Update `CHANGELOG.md` for every user-visible change.
 
 ## Releasing
 
-1. Bump `version` in `package.json` and add a `CHANGELOG.md` entry.
+1. Bump `version` in `package.json` and `package-lock.json`, update the `leaflet-drift-marker@X.Y.Z` URL in `README.md`, and add a `CHANGELOG.md` entry.
 2. `npm publish` (runs `prepublishOnly`: lint, typecheck, test, build). Publishing is done by the maintainer, not by agents.
 3. Tag `vX.Y.Z` and create a GitHub release.
