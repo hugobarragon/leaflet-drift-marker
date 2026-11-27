@@ -1,10 +1,8 @@
 import {
+  LatLng,
   Marker,
-  Util,
-  latLng,
-  type LatLng,
   type LatLngExpression,
-  type Map as LeafletMap,
+  type LeafletMap,
   type MarkerOptions,
 } from "leaflet";
 
@@ -13,24 +11,21 @@ export interface SlideOptions {
   keepAtCenter?: boolean;
 }
 
-/** @deprecated Use `SlideOptions`. */
-export type slideOptions = SlideOptions;
-
 // Leaflet keeps `_map` out of its public types.
 type MarkerInternals = { _map?: LeafletMap | null };
 
 interface MapInteraction {
   dragging: boolean;
   doubleClickZoom: boolean;
-  touchZoom: LeafletMap["options"]["touchZoom"];
+  pinchZoom: LeafletMap["options"]["pinchZoom"];
   scrollWheelZoom: LeafletMap["options"]["scrollWheelZoom"];
 }
 
 class DriftMarker extends Marker {
   private _slideToUntil = 0;
   private _slideToDuration = 1000;
-  private _slideToLatLng: LatLng = latLng(0, 0);
-  private _slideFromLatLng: LatLng = latLng(0, 0);
+  private _slideToLatLng: LatLng = new LatLng(0, 0);
+  private _slideFromLatLng: LatLng = new LatLng(0, 0);
   private _slideKeepAtCenter = false;
   // Map interaction captured before a keepAtCenter slide; null when nothing to restore.
   private _slideSavedInteraction: MapInteraction | null = null;
@@ -53,24 +48,24 @@ class DriftMarker extends Marker {
     const map = this._slideMap;
     if (!map) return this;
 
-    Util.cancelAnimFrame(this._slideFrame);
+    cancelAnimationFrame(this._slideFrame);
 
     this._slideToDuration = options.duration;
     this._slideToUntil = performance.now() + options.duration;
     this._slideFromLatLng = this.getLatLng();
-    this._slideToLatLng = latLng(latlng);
+    this._slideToLatLng = new LatLng(latlng);
     this._slideKeepAtCenter = !!options.keepAtCenter;
 
     if (this._slideKeepAtCenter) {
       this._slideSavedInteraction ??= {
         dragging: map.dragging.enabled(),
         doubleClickZoom: map.doubleClickZoom.enabled(),
-        touchZoom: map.options.touchZoom,
+        pinchZoom: map.options.pinchZoom,
         scrollWheelZoom: map.options.scrollWheelZoom,
       };
       map.dragging.disable();
       map.doubleClickZoom.disable();
-      map.options.touchZoom = "center";
+      map.options.pinchZoom = "center";
       map.options.scrollWheelZoom = "center";
     }
 
@@ -83,14 +78,14 @@ class DriftMarker extends Marker {
   // 🍂method slideCancel(): this
   // Cancels the sliding animation from `slideTo`, if applicable.
   slideCancel(): this {
-    Util.cancelAnimFrame(this._slideFrame);
+    cancelAnimationFrame(this._slideFrame);
     this._slideRestoreMap();
     return this;
   }
 
-  onRemove(map: LeafletMap): this {
+  onRemove(map: LeafletMap): void {
     this.slideCancel();
-    return super.onRemove(map);
+    super.onRemove(map);
   }
 
   private _onMove() {
@@ -114,7 +109,7 @@ class DriftMarker extends Marker {
 
     if (saved.dragging) map.dragging.enable();
     if (saved.doubleClickZoom) map.doubleClickZoom.enable();
-    map.options.touchZoom = saved.touchZoom;
+    map.options.pinchZoom = saved.pinchZoom;
     map.options.scrollWheelZoom = saved.scrollWheelZoom;
   }
 
@@ -144,7 +139,7 @@ class DriftMarker extends Marker {
       map.panTo(currLatLng, { animate: false });
     }
 
-    this._slideFrame = Util.requestAnimFrame(this._slideTo, this);
+    this._slideFrame = requestAnimationFrame(() => this._slideTo());
   }
 }
 
