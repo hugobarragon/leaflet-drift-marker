@@ -18,6 +18,7 @@ Public API (keep it stable):
 - `src/index.ts`: the whole library.
 - `src/index.test.ts`: Vitest + jsdom tests against a real Leaflet map, with faked `requestAnimationFrame` and `performance`.
 - `tsup.config.ts`: builds `dist/` as ESM (`index.js`), CommonJS (`index.cjs`) and a `<script>` build (`index.global.js`, reads Leaflet from the global `L`), plus `.d.ts`/`.d.cts`. All target ES2020.
+- `demo/index.html`: live demo published to GitHub Pages by `.github/workflows/pages.yml` on pushes to `master`. It loads the library from `./dist/index.js`.
 - `docs/`: README assets.
 
 ## Commands
@@ -29,6 +30,7 @@ npm run typecheck   # tsc --noEmit
 npm run lint        # eslint + prettier --check
 npm run format      # prettier --write
 npm run build       # tsup -> dist/
+npm run site        # build + demo -> .site/ (what GitHub Pages serves)
 ```
 
 Run `lint`, `typecheck`, `test` and `build` before calling a change done; CI runs the same on Node 22 and 24 (the dev tools need Node 22+; the published package has no Node requirement).
@@ -42,7 +44,7 @@ Run `lint`, `typecheck`, `test` and `build` before calling a change done; CI run
 - Private slide state is prefixed `_slide` to avoid clashing with `L.Marker` internals.
 - `src/index.ts` must not touch `window` or other globals at import time. `sideEffects` in `package.json` lists only the `<script>` build.
 - Leaflet 1.9 has no `module` field, so bundlers load its UMD build; browsers without a bundler load `dist/leaflet-src.esm.js` through an import map.
-- After changing exports or the build, check both README browser examples locally against `dist/` (the `<script>` page with `index.global.js`, the import-map page with `index.js`) and confirm the marker slides.
+- After changing exports or the build, run `npm run site`, serve `.site/` and check the demo, then check both README browser examples locally against `dist/` (the `<script>` page with `index.global.js`, the import-map page with `index.js`) and confirm the marker slides.
 - Update `CHANGELOG.md` for every user-visible change.
 
 ## Roadmap
