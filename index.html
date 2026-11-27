@@ -135,18 +135,9 @@ const marker = new DriftMarker([38.7071, -9.1355]).addTo(map);
 marker.slideTo([38.7139, -9.1394], { duration: 1000, keepAtCenter: true });</code></pre>
     </main>
 
-    <script type="importmap">
-      {
-        "imports": {
-          "leaflet": "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js",
-          "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@2/dist/index.js"
-        }
-      }
-    </script>
-    <script type="module">
-      import * as L from "leaflet";
-      import DriftMarker from "leaflet-drift-marker";
-
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-drift-marker@2/lib/index.js"></script>
+    <script>
       const route = [
         [38.7071, -9.1355],
         [38.7107, -9.1366],
