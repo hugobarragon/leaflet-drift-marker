@@ -1,6 +1,6 @@
 {
   "name": "leaflet-drift-marker",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": false,
   "type": "module",
   "description": "A Leaflet marker that drifts smoothly to a new position. Framework-agnostic, written in TypeScript.",
