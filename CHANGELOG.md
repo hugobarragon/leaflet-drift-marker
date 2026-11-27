@@ -13,7 +13,7 @@
 
 ### Changed
 
-- Ships ESM (`dist/index.js`), CommonJS (`dist/index.cjs`) and a `<script>` build (`dist/index.global.js`) with TypeScript types. The `var exports = {}` workaround for `<script>` usage is no longer needed.
+- Ships ESM (`lib/index.mjs`), CommonJS (`lib/index.cjs`) and a `<script>` build (`lib/index.js`, the same path as 2.0.0) with TypeScript types. Existing `<script>` URLs keep working, and the `var exports = {}` workaround is no longer needed.
 - `window.DriftMarker` is set by the `<script>` build only; bundler imports no longer write to `window`.
 - Adds a named `DriftMarker` export and a `SlideOptions` type; `slideOptions` stays as a deprecated alias.
 - `peerDependencies` now caps Leaflet below 2.0.
