@@ -45,7 +45,7 @@ Load Leaflet first; the script reads the global `L` and sets `window.DriftMarker
 ```html
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-drift-marker@2.1.0/lib/index.js"></script>
+<script src="https://unpkg.com/leaflet-drift-marker@2.1.1/lib/index.js"></script>
 
 <div id="map" style="height: 400px"></div>
 <script>
@@ -71,7 +71,7 @@ Use a module script and an import map so `leaflet` resolves to Leaflet's ESM bui
   {
     "imports": {
       "leaflet": "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js",
-      "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@2.1.0/lib/index.mjs"
+      "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@2.1.1/lib/index.mjs"
     }
   }
 </script>
