@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.0-beta.1
+
+### Fixed
+
+- An invalid `duration` (such as `NaN`) is treated as 0 instead of throwing and leaving the map locked.
+- Retargeting a `keepAtCenter` slide with a slide that doesn't use it unlocks the map right away.
+- Moving a sliding marker to another map unlocks the map it was locked on.
+
 ## 3.0.0-beta.0
 
 ### Breaking
