@@ -21,6 +21,14 @@
 - Uses Leaflet 2's API: `LatLng` instead of `latLng()`, native `requestAnimationFrame`, and `pinchZoom` instead of `touchZoom` for `keepAtCenter`.
 - Published under the npm `next` tag while Leaflet 2 is in beta.
 
+## 2.1.1
+
+### Fixed
+
+- An invalid `duration` (such as `NaN`) is treated as 0 instead of throwing and leaving the map locked.
+- Retargeting a `keepAtCenter` slide with a slide that doesn't use it unlocks the map right away.
+- Moving a sliding marker to another map unlocks the map it was locked on.
+
 ## 2.1.0
 
 ### Fixed

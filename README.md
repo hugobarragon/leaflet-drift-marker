@@ -19,7 +19,7 @@ Using React? See [react-leaflet-drift-marker](https://github.com/hugobarragon/re
 
 ## Versions
 
-This README covers 3.x for Leaflet 2. For Leaflet 1, see the [2.x README](https://github.com/hugobarragon/leaflet-drift-marker/blob/v2.1.0/README.md). For many markers, use Leaflet's canvas renderer for better performance.
+This README covers 3.x for Leaflet 2. For Leaflet 1, see the [2.x README](https://github.com/hugobarragon/leaflet-drift-marker/blob/v2.1.1/README.md). For many markers, use Leaflet's canvas renderer for better performance.
 
 ## Installation
 
