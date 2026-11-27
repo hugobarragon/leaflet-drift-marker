@@ -128,15 +128,5 @@ class DriftMarker extends Marker {
   }
 }
 
-declare global {
-  interface Window {
-    DriftMarker: typeof DriftMarker;
-  }
-}
-
-if (typeof window !== "undefined") {
-  window.DriftMarker = DriftMarker;
-}
-
 export { DriftMarker };
 export default DriftMarker;
