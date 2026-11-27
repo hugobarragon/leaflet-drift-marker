@@ -106,7 +106,7 @@ describe("DriftMarker", () => {
     expect(marker.getLatLng()).toEqual(L.latLng(-5, -5));
   });
 
-  it("is exposed as window.DriftMarker for script-tag usage", () => {
-    expect(window.DriftMarker).toBe(DriftMarker);
+  it("has no global side effects", () => {
+    expect("DriftMarker" in window).toBe(false);
   });
 });
