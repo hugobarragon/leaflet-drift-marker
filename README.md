@@ -10,8 +10,6 @@
 | 1.x     | 2.x                  | Leaflet 1.9.4        | `npm install leaflet-drift-marker@2`    |
 | 1.x     | 1.x (legacy, React)  | react-leaflet 2      | `npm install leaflet-drift-marker@1`    |
 
-For React, use [react-leaflet-drift-marker](https://github.com/hugobarragon/react-leaflet-drift-marker) instead of 1.x.
-
 ![DriftMarker example](./docs/driftmarker.gif "example")
 
 **[Live demo](https://hugobarragon.github.io/leaflet-drift-marker/)** (2.x on Leaflet 1)
