@@ -11,13 +11,13 @@ Public API (keep it stable):
 - `new DriftMarker(latlng, markerOptions?)`: same as `L.Marker`.
 - `.slideTo(latlng, { duration, keepAtCenter? })`: fires `movestart` / `moveend`, returns `this`.
 - `.slideCancel()`: stops the animation and restores map interaction.
-- Default export and named `DriftMarker` export; `window.DriftMarker` is set for `<script>` usage.
+- Default export and named `DriftMarker` export. The package is ESM only and has no global side effects.
 
 ## Layout
 
 - `src/index.ts`: the whole library.
 - `src/index.test.ts`: Vitest + jsdom tests against a real Leaflet map, with faked `requestAnimationFrame` and `performance`.
-- `tsup.config.ts`: builds `dist/` as ESM (`index.js`), CJS (`index.cjs`), IIFE (`index.global.js`, reads Leaflet from global `L`) plus `.d.ts`.
+- `tsup.config.ts`: builds `dist/index.js` (ESM, ES2020) plus `.d.ts`. Do not add CommonJS or global builds back.
 - `docs/`: README assets.
 
 ## Commands
