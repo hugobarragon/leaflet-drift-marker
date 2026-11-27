@@ -20,6 +20,7 @@ export type slideOptions = SlideOptions;
 type MarkerInternals = { _map?: LeafletMap | null };
 
 interface MapInteraction {
+  map: LeafletMap;
   dragging: boolean;
   doubleClickZoom: boolean;
   touchZoom: LeafletMap["options"]["touchZoom"];
@@ -55,14 +56,20 @@ class DriftMarker extends Marker {
 
     Util.cancelAnimFrame(this._slideFrame);
 
-    this._slideToDuration = options.duration;
-    this._slideToUntil = performance.now() + options.duration;
+    const duration = Number.isFinite(options.duration) ? Math.max(0, options.duration) : 0;
+    this._slideToDuration = duration;
+    this._slideToUntil = performance.now() + duration;
     this._slideFromLatLng = this.getLatLng();
     this._slideToLatLng = latLng(latlng);
     this._slideKeepAtCenter = !!options.keepAtCenter;
 
+    // A retarget without keepAtCenter, or onto another map, releases the previous lock.
+    const saved = this._slideSavedInteraction;
+    if (saved && (!this._slideKeepAtCenter || saved.map !== map)) this._slideRestoreMap();
+
     if (this._slideKeepAtCenter) {
       this._slideSavedInteraction ??= {
+        map,
         dragging: map.dragging.enabled(),
         doubleClickZoom: map.doubleClickZoom.enabled(),
         touchZoom: map.options.touchZoom,
@@ -107,11 +114,11 @@ class DriftMarker extends Marker {
   }
 
   private _slideRestoreMap() {
-    const map = this._slideMap;
     const saved = this._slideSavedInteraction;
     this._slideSavedInteraction = null;
-    if (!map || !saved) return;
+    if (!saved) return;
 
+    const { map } = saved;
     if (saved.dragging) map.dragging.enable();
     if (saved.doubleClickZoom) map.doubleClickZoom.enable();
     map.options.touchZoom = saved.touchZoom;
