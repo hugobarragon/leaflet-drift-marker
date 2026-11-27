@@ -8,7 +8,6 @@
 | ------- | -------------------- | -------------------- | --------------------------------------- |
 | 2.x     | 3.x (beta, ESM only) | Leaflet 2.0.0-beta.5 | `npm install leaflet-drift-marker@next` |
 | 1.x     | 2.x                  | Leaflet 1.9.4        | `npm install leaflet-drift-marker@2`    |
-| 1.x     | 1.x (legacy, React)  | react-leaflet 2      | `npm install leaflet-drift-marker@1`    |
 
 ![DriftMarker example](./docs/driftmarker.gif "example")
 
