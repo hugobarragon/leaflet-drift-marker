@@ -1,6 +1,6 @@
 {
   "name": "leaflet-drift-marker",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": false,
   "type": "module",
   "description": "Leaflet plugin for animated markers that move smoothly to a new position. Ideal for live GPS and vehicle tracking. TypeScript, with ESM, CommonJS and CDN builds.",
