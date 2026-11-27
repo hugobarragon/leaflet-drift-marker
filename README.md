@@ -57,7 +57,7 @@ Use a module script and an import map so `leaflet` resolves to Leaflet 2's ESM b
   {
     "imports": {
       "leaflet": "https://unpkg.com/leaflet@2.0.0-beta.5/dist/leaflet.js",
-      "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@3.0.0-beta.0/lib/index.js"
+      "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@3.0.0-beta.1/lib/index.js"
     }
   }
 </script>
