@@ -39,25 +39,47 @@ marker.slideTo([20, 20], {
 
 ### In the browser without a bundler
 
-Use a module script and an import map so `leaflet` resolves to Leaflet's ESM build.
+Use a module script and an import map so `leaflet` resolves to Leaflet's ESM build. A complete page:
 
 ```html
-<script type="importmap">
-  {
-    "imports": {
-      "leaflet": "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js",
-      "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@3.0.0/dist/index.js"
-    }
-  }
-</script>
-<script type="module">
-  import * as L from "leaflet";
-  import DriftMarker from "leaflet-drift-marker";
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+      #map {
+        height: 400px;
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js",
+          "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@3.0.0/dist/index.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="module">
+      import * as L from "leaflet";
+      import DriftMarker from "leaflet-drift-marker";
 
-  const map = L.map("map").setView([0, 0], 4);
-  new DriftMarker([0, 0]).addTo(map).slideTo([10, 10], { duration: 1000 });
-</script>
+      const map = L.map("map").setView([0, 0], 4);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+      }).addTo(map);
+
+      const marker = new DriftMarker([0, 0]).addTo(map);
+      marker.slideTo([10, 10], { duration: 1000 });
+    </script>
+  </body>
+</html>
 ```
+
+Older Leaflet plugins that read a global `L` need it set first: `window.L = L;`, then load the plugin with `await import(...)`.
 
 ### Upgrading from 2.x
 
