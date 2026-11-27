@@ -54,7 +54,22 @@ Run `lint`, `typecheck`, `test` and `build` before calling a change done; CI run
 
 ## Releasing
 
-1. Bump `version` in `package.json` and `package-lock.json`, update the `leaflet-drift-marker@X.Y.Z` URLs in `README.md`, and add a `CHANGELOG.md` entry.
-2. `npm publish` (runs `prepublishOnly`: lint, typecheck, test, build; 3.x goes to the `next` tag). Publishing is done by the maintainer, not by agents.
-3. Tag `vX.Y.Z` and create a GitHub release.
-4. When Leaflet 2.0 is stable: switch `peerDependencies` to `^2.0.0`, remove `publishConfig.tag`, and release 3.0.0 as `latest`.
+1. Bump `version` in `package.json` and `package-lock.json` and add a `CHANGELOG.md` entry.
+2. Publish (the maintainer does this, not agents; it runs `prepublishOnly`: lint, typecheck, test, build):
+   - 3.x while Leaflet 2 is in beta: `npm publish --tag next`. Always pass `--tag next`: npm's default `tag` setting overrides `publishConfig.tag`, and without the flag the beta goes to `latest`.
+   - 2.x: from a branch cut from the latest `v2.x` tag, `npm publish --tag v2-latest` once 3.x is `latest`; until then plain `npm publish`.
+3. Tag `vX.Y.Z` on the published commit and create a GitHub release with the `CHANGELOG.md` notes. Mark beta versions as prereleases.
+4. Check `npm view leaflet-drift-marker dist-tags`: `next` (3.x beta) and `latest` (2.x, until 3.0.0 stable) must point where intended.
+
+## Keep in sync
+
+Update these whenever the related change happens:
+
+- **README version table** (top of `README.md`): a row per supported Leaflet major, with the tested Leaflet version and install command.
+- **README CDN URLs**: `leaflet-drift-marker@X.Y.Z` and the `leaflet@...` URLs in the browser example.
+- **Leaflet beta bumps**: the exact `leaflet` version in `devDependencies`, the `peerDependencies` range, the README `unpkg.com/leaflet@...` URLs and the "Tested with" column.
+- **Demo** (`index.html`): loads `leaflet-drift-marker@2` on Leaflet 1. Move it to 3.x and Leaflet 2 only when 3.0.0 is stable.
+- **Leaflet plugin list**: the entry in Leaflet's repo at `docs/_plugins/overlay-animations/leaflet-drift-marker.md` (`compatible-v2`, demo URL, description). Changes go through a PR to `Leaflet/Leaflet`.
+- **npm and GitHub metadata**: `description` and `keywords` in `package.json`, and the GitHub repo description, topics and homepage, so they describe the same thing.
+
+When Leaflet 2.0 is stable: set `peerDependencies` to `^2.0.0`, remove `publishConfig.tag`, release 3.0.0 to `latest`, update the README table, the demo and the plugin-list entry.
