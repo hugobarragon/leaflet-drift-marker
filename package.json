@@ -2,9 +2,29 @@
   "name": "leaflet-drift-marker",
   "version": "2.0.0",
   "private": false,
-  "description": "Just a marker that can drift its way to a new position, to use with leaflet, and base on Typescript for react,vue...",
-  "main": "lib/index.js",
-  "types": "lib",
+  "type": "module",
+  "description": "A Leaflet marker that drifts smoothly to a new position. Framework-agnostic, written in TypeScript.",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "unpkg": "./dist/index.global.js",
+  "jsdelivr": "./dist/index.global.js",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hugobarragon/leaflet-drift-marker.git"
@@ -29,18 +49,31 @@
     "url": "https://github.com/hugobarragon/leaflet-drift-marker/issues"
   },
   "homepage": "https://github.com/hugobarragon/leaflet-drift-marker#readme",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p ."
+  "engines": {
+    "node": ">=18"
   },
-  "devDependencies": {
-    "@types/leaflet": "^1.7.0",
-    "@types/node": "^12.7.2",
-    "leaflet": "^1.7.1",
-    "typescript": "^3.5.3"
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "prepublishOnly": "npm run lint && npm run typecheck && npm test && npm run build"
   },
   "peerDependencies": {
     "leaflet": ">=1.2.0"
   },
-  "dependencies": {}
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/leaflet": "^1.9.23",
+    "eslint": "^10.15.0",
+    "jsdom": "^31.0.1",
+    "leaflet": "^1.9.4",
+    "prettier": "^3.10.1",
+    "tsup": "^9.0.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.74.0",
+    "vitest": "^5.1.2"
+  }
 }
