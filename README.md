@@ -24,9 +24,10 @@ npm install leaflet-drift-marker leaflet
 
 ### With a bundler
 
+The package is ESM only.
+
 ```javascript
 import DriftMarker from "leaflet-drift-marker";
-// or: const { DriftMarker } = require("leaflet-drift-marker");
 
 const marker = new DriftMarker([10, 10]).addTo(map);
 
@@ -36,17 +37,32 @@ marker.slideTo([20, 20], {
 });
 ```
 
-### With a `<script>` tag
+### In the browser without a bundler
 
-Load Leaflet first; the script sets `window.DriftMarker`.
+Use a module script and an import map so `leaflet` resolves to Leaflet's ESM build.
 
 ```html
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-drift-marker@2.1.0/dist/index.global.js"></script>
-<script>
-  const marker = new DriftMarker([10, 10]).addTo(map);
+<script type="importmap">
+  {
+    "imports": {
+      "leaflet": "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js",
+      "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@3.0.0/dist/index.js"
+    }
+  }
+</script>
+<script type="module">
+  import * as L from "leaflet";
+  import DriftMarker from "leaflet-drift-marker";
+
+  const map = L.map("map").setView([0, 0], 4);
+  new DriftMarker([0, 0]).addTo(map).slideTo([10, 10], { duration: 1000 });
 </script>
 ```
+
+### Upgrading from 2.x
+
+- `require("leaflet-drift-marker")` no longer works; use `import`.
+- `window.DriftMarker` is no longer set; import it instead.
 
 [![Edit leaflet_DriftMarker](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/static-bcdhq?fontsize=14)
 
