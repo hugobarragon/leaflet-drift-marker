@@ -31,7 +31,7 @@ npm run format      # prettier --write
 npm run build       # tsup -> dist/
 ```
 
-Run `lint`, `typecheck`, `test` and `build` before calling a change done; CI runs the same on Node 18, 20 and 22.
+Run `lint`, `typecheck`, `test` and `build` before calling a change done; CI runs the same on Node 22 and 24 (the dev tools need Node 22+; the published package has no Node requirement).
 
 ## Conventions
 
