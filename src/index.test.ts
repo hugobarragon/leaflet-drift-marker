@@ -1,7 +1,7 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type * as LeafletNS from "leaflet";
 
-// Leaflet captures requestAnimationFrame at import time, so fake timers go in first.
+// Fake timers go in before Leaflet and the marker load.
 vi.useFakeTimers({ toFake: ["requestAnimationFrame", "cancelAnimationFrame", "performance"] });
 
 let L: typeof LeafletNS;
@@ -17,7 +17,7 @@ let map: LeafletNS.Map;
 beforeEach(() => {
   const container = document.createElement("div");
   document.body.appendChild(container);
-  map = L.map(container).setView([0, 0], 5);
+  map = new L.LeafletMap(container).setView([0, 0], 5);
 });
 
 afterEach(() => {
@@ -50,7 +50,7 @@ describe("DriftMarker", () => {
     expect(moveend).not.toHaveBeenCalled();
 
     finishSlide();
-    expect(marker.getLatLng()).toEqual(L.latLng(10, 10));
+    expect(marker.getLatLng()).toEqual(new L.LatLng(10, 10));
     expect(moveend).toHaveBeenCalledTimes(1);
   });
 
@@ -58,7 +58,7 @@ describe("DriftMarker", () => {
     const marker = new DriftMarker([0, 0]);
     marker.slideTo([10, 10], { duration: 1000 });
     finishSlide();
-    expect(marker.getLatLng()).toEqual(L.latLng(0, 0));
+    expect(marker.getLatLng()).toEqual(new L.LatLng(0, 0));
   });
 
   it("re-enables map dragging after a keepAtCenter slide", () => {
@@ -103,7 +103,7 @@ describe("DriftMarker", () => {
     marker.setLatLng([-5, -5]);
     finishSlide();
 
-    expect(marker.getLatLng()).toEqual(L.latLng(-5, -5));
+    expect(marker.getLatLng()).toEqual(new L.LatLng(-5, -5));
   });
 
   it("has no global side effects", () => {
@@ -116,7 +116,7 @@ describe("DriftMarker", () => {
     marker.on("moveend", moveend);
 
     expect(() => marker.slideTo([10, 10], { duration: 0 })).not.toThrow();
-    expect(marker.getLatLng()).toEqual(L.latLng(10, 10));
+    expect(marker.getLatLng()).toEqual(new L.LatLng(10, 10));
     expect(moveend).toHaveBeenCalledTimes(1);
   });
 
@@ -129,7 +129,7 @@ describe("DriftMarker", () => {
     finishSlide();
 
     expect(map.dragging.enabled()).toBe(true);
-    expect(map.options.touchZoom).toBe(true);
+    expect(map.options.pinchZoom).toBe(true);
   });
 
   it("keeps the map locked for a keepAtCenter slide started from moveend", () => {
@@ -143,7 +143,7 @@ describe("DriftMarker", () => {
     expect(map.dragging.enabled()).toBe(false);
 
     finishSlide();
-    expect(marker.getLatLng()).toEqual(L.latLng(20, 20));
+    expect(marker.getLatLng()).toEqual(new L.LatLng(20, 20));
     expect(map.dragging.enabled()).toBe(true);
   });
 
@@ -158,7 +158,7 @@ describe("DriftMarker", () => {
     expect(map.dragging.enabled()).toBe(true);
     expect(map.doubleClickZoom.enabled()).toBe(false);
     expect(map.options.scrollWheelZoom).toBe("center");
-    expect(map.options.touchZoom).toBe(true);
+    expect(map.options.pinchZoom).toBe(true);
   });
 
   it("retargets cleanly when slideTo is called mid-slide", () => {
@@ -169,7 +169,7 @@ describe("DriftMarker", () => {
     marker.slideTo([-10, -10], { duration: 1000, keepAtCenter: true });
     finishSlide();
 
-    expect(marker.getLatLng()).toEqual(L.latLng(-10, -10));
+    expect(marker.getLatLng()).toEqual(new L.LatLng(-10, -10));
     expect(map.dragging.enabled()).toBe(true);
   });
 
