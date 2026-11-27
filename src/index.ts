@@ -1,121 +1,142 @@
-if (typeof window.exports != "object") {
-  //cdn usage on browsers without "exports" variable
-  window.exports = {};
-}
+import {
+  Marker,
+  Util,
+  latLng,
+  type LatLng,
+  type LatLngExpression,
+  type Map as LeafletMap,
+  type MarkerOptions,
+} from "leaflet";
 
-import { Marker as LeafletMarker, LatLngExpression } from "leaflet";
-
-// constructor type
-type ConstMarker = new (...args: any[]) => LeafletMarker;
-
-// needed leaflet type
-type LeafletType = {
-  Marker: ConstMarker;
-  Util: any;
-};
-declare global {
-  interface Window {
-    DriftMarker: any;
-    exports: Object;
-    L: LeafletType;
-  }
-}
-
-let Leaflet_module = window.L ? window.L : (require("leaflet") as LeafletType);
-
-type slideOptions = {
+export interface SlideOptions {
   duration: number;
   keepAtCenter?: boolean;
-};
+}
 
-class DriftMarker extends Leaflet_module.Marker {
+/** @deprecated Use `SlideOptions`. */
+export type slideOptions = SlideOptions;
+
+// Leaflet keeps `_map` out of its public types.
+type MarkerInternals = { _map?: LeafletMap | null };
+
+class DriftMarker extends Marker {
   private _slideToUntil = 0;
   private _slideToDuration = 1000;
-  private _slideToLatLng: LatLngExpression = [0, 0];
-  private _slideFromLatLng: LatLngExpression = [0, 0];
+  private _slideToLatLng: LatLng = latLng(0, 0);
+  private _slideFromLatLng: LatLng = latLng(0, 0);
   private _slideKeepAtCenter = false;
-  private _slideDraggingWasAllowed = false;
+  // Map interaction state captured before a keepAtCenter slide; null when nothing to restore.
+  private _slideDraggingWasAllowed: boolean | null = null;
   private _slideFrame = 0;
+  private _slideIsMoving = false;
 
-  addInitHook = () => {
-    this.on("move", this.slideCancel, this);
-  };
+  constructor(latlng: LatLngExpression, options?: MarkerOptions) {
+    super(latlng, options);
+    this.on("move", this._onMove, this);
+  }
+
+  private get _slideMap() {
+    return (this as unknown as MarkerInternals)._map ?? null;
+  }
 
   // 🍂method slideTo(latlng: LatLng, options: Slide Options): this
   // Moves this marker until `latlng`, like `setLatLng()`, but with a smooth
   // sliding animation. Fires `movestart` and `moveend` events.
-  slideTo = (latlng: LatLngExpression, options: slideOptions) => {
-    if (!this._map) return;
+  slideTo(latlng: LatLngExpression, options: SlideOptions): this {
+    const map = this._slideMap;
+    if (!map) return this;
+
+    Util.cancelAnimFrame(this._slideFrame);
 
     this._slideToDuration = options.duration;
     this._slideToUntil = performance.now() + options.duration;
     this._slideFromLatLng = this.getLatLng();
-    this._slideToLatLng = latlng;
+    this._slideToLatLng = latLng(latlng);
     this._slideKeepAtCenter = !!options.keepAtCenter;
-    this._slideDraggingWasAllowed =
-      this._slideDraggingWasAllowed !== undefined
-        ? this._slideDraggingWasAllowed
-        : this._map.dragging.enabled();
 
     if (this._slideKeepAtCenter) {
-      this._map.dragging.disable();
-      this._map.doubleClickZoom.disable();
-      this._map.options.touchZoom = "center";
-      this._map.options.scrollWheelZoom = "center";
+      if (this._slideDraggingWasAllowed === null) {
+        this._slideDraggingWasAllowed = map.dragging.enabled();
+      }
+      map.dragging.disable();
+      map.doubleClickZoom.disable();
+      map.options.touchZoom = "center";
+      map.options.scrollWheelZoom = "center";
     }
 
     this.fire("movestart");
     this._slideTo();
 
     return this;
-  };
+  }
 
   // 🍂method slideCancel(): this
   // Cancels the sliding animation from `slideTo`, if applicable.
-  slideCancel() {
-    Leaflet_module.Util.cancelAnimFrame(this._slideFrame);
+  slideCancel(): this {
+    Util.cancelAnimFrame(this._slideFrame);
+    this._slideRestoreMap();
+    return this;
   }
 
-  private _slideTo = () => {
-    if (!this._map) return;
+  private _onMove() {
+    if (!this._slideIsMoving) this.slideCancel();
+  }
 
-    var remaining = this._slideToUntil - performance.now();
+  private _slideSetLatLng(latlng: LatLng) {
+    this._slideIsMoving = true;
+    this.setLatLng(latlng);
+    this._slideIsMoving = false;
+  }
+
+  private _slideRestoreMap() {
+    const map = this._slideMap;
+    if (map && this._slideDraggingWasAllowed) {
+      map.dragging.enable();
+      map.doubleClickZoom.enable();
+      map.options.touchZoom = true;
+      map.options.scrollWheelZoom = true;
+    }
+    this._slideDraggingWasAllowed = null;
+  }
+
+  private _slideTo() {
+    const map = this._slideMap;
+    if (!map) return;
+
+    const remaining = this._slideToUntil - performance.now();
 
     if (remaining < 0) {
-      this.setLatLng(this._slideToLatLng);
+      this._slideSetLatLng(this._slideToLatLng);
       this.fire("moveend");
-      if (this._slideDraggingWasAllowed) {
-        this._map.dragging.enable();
-        this._map.doubleClickZoom.enable();
-        this._map.options.touchZoom = true;
-        this._map.options.scrollWheelZoom = true;
-      }
-      this._slideDraggingWasAllowed = false;
-      return this;
+      this._slideRestoreMap();
+      return;
     }
 
-    var startPoint = this._map.latLngToContainerPoint(this._slideFromLatLng);
-    var endPoint = this._map.latLngToContainerPoint(this._slideToLatLng);
-    var percentDone =
-      (this._slideToDuration - remaining) / this._slideToDuration;
+    const startPoint = map.latLngToContainerPoint(this._slideFromLatLng);
+    const endPoint = map.latLngToContainerPoint(this._slideToLatLng);
+    const percentDone = (this._slideToDuration - remaining) / this._slideToDuration;
 
-    var currPoint = endPoint
-      .multiplyBy(percentDone)
-      .add(startPoint.multiplyBy(1 - percentDone));
-    var currLatLng = this._map.containerPointToLatLng(currPoint);
-    this.setLatLng(currLatLng);
+    const currPoint = endPoint.multiplyBy(percentDone).add(startPoint.multiplyBy(1 - percentDone));
+    const currLatLng = map.containerPointToLatLng(currPoint);
+    this._slideSetLatLng(currLatLng);
 
     if (this._slideKeepAtCenter) {
-      this._map.panTo(currLatLng, { animate: false });
+      map.panTo(currLatLng, { animate: false });
     }
 
-    this._slideFrame = Leaflet_module.Util.requestAnimFrame(
-      this._slideTo,
-      this
-    );
-  };
+    this._slideFrame = Util.requestAnimFrame(this._slideTo, this);
+  }
 }
 
-window.DriftMarker = DriftMarker;
+declare global {
+  interface Window {
+    DriftMarker: typeof DriftMarker;
+  }
+}
 
+if (typeof window !== "undefined") {
+  window.DriftMarker = DriftMarker;
+}
+
+export { DriftMarker };
 export default DriftMarker;
