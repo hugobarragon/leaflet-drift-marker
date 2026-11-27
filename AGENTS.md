@@ -24,8 +24,7 @@ Public API (keep it stable):
 - `src/index.test.ts`: Vitest + jsdom tests against a real Leaflet 2 map, with faked `requestAnimationFrame` and `performance`.
 - `src/test-setup.ts`: stubs `ResizeObserver`, which jsdom lacks and Leaflet 2's map uses.
 - `tsup.config.ts`: builds `lib/index.js` (ESM, ES2022, the level Leaflet 2 already requires) plus `.d.ts`.
-- `index.html`: live demo, served by GitHub Pages straight from `master` (no build). It still loads 2.x (`leaflet-drift-marker@2`) on Leaflet 1 through classic `<script>` tags, so it changes only when a 2.x version is published.
-- `docs/`: README assets.
+- `docs/`: the website, served by GitHub Pages from `master` `/docs` as plain HTML (no build, no workflow). `docs/index.html` is the 3.x docs page with a live demo (Leaflet 2 and `leaflet-drift-marker@next` from unpkg through an import map). `docs/v2/index.html` is the 2.x example (Leaflet 1, `leaflet-drift-marker@2`, classic `<script>` tags). `docs/driftmarker.gif` is the README image.
 
 ## Commands
 
@@ -68,8 +67,8 @@ Update these whenever the related change happens:
 - **README version table** (top of `README.md`): a row per supported Leaflet major, with the tested Leaflet version and install command.
 - **README CDN URLs**: `leaflet-drift-marker@X.Y.Z` and the `leaflet@...` URLs in the browser example.
 - **Leaflet beta bumps**: the exact `leaflet` version in `devDependencies`, the `peerDependencies` range, the README `unpkg.com/leaflet@...` URLs and the "Tested with" column.
-- **Demo** (`index.html`): loads `leaflet-drift-marker@2` on Leaflet 1. Move it to 3.x and Leaflet 2 only when 3.0.0 is stable.
+- **Website** (`docs/index.html`): its versions table, install command, usage and API match `README.md`; its import map uses `@next` and the Leaflet beta version. When 3.0.0 is stable, switch it to `@3`.
 - **Leaflet plugin list**: the entry in Leaflet's repo at `docs/_plugins/overlay-animations/leaflet-drift-marker.md` (`compatible-v2`, demo URL, description). Changes go through a PR to `Leaflet/Leaflet`.
 - **npm and GitHub metadata**: `description` and `keywords` in `package.json`, and the GitHub repo description, topics and homepage, so they describe the same thing.
 
-When Leaflet 2.0 is stable: set `peerDependencies` to `^2.0.0`, remove `publishConfig.tag`, release 3.0.0 to `latest`, update the README table, the demo and the plugin-list entry.
+When Leaflet 2.0 is stable: set `peerDependencies` to `^2.0.0`, remove `publishConfig.tag`, release 3.0.0 to `latest`, update the README table, the website and the plugin-list entry.
