@@ -17,8 +17,8 @@ Public API (keep it stable):
 
 - `src/index.ts`: the whole library.
 - `src/index.test.ts`: Vitest + jsdom tests against a real Leaflet map, with faked `requestAnimationFrame` and `performance`.
-- `tsup.config.ts`: builds `dist/` as ESM (`index.js`), CommonJS (`index.cjs`) and a `<script>` build (`index.global.js`, reads Leaflet from the global `L`), plus `.d.ts`/`.d.cts`. All target ES2020.
-- `index.html`: live demo, served by GitHub Pages straight from `master` (no build). It loads the latest published 2.x from unpkg (`leaflet-drift-marker@2`), so it changes only when a new version is published; bump the major in its import map when releasing 3.0.
+- `tsup.config.ts`: builds `lib/` as ESM (`index.mjs`), CommonJS (`index.cjs`) and a `<script>` build (`index.js`, reads Leaflet from the global `L`), plus `.d.ts`/`.d.cts`. All target ES2020. `lib/index.js` was the CDN file in 2.0.0, so keep that name and keep it a `<script>` build within 2.x.
+- `index.html`: live demo, served by GitHub Pages straight from `master` (no build). It loads the latest published 2.x from unpkg (`leaflet-drift-marker@2`), so it changes only when a new version is published; it uses the classic `<script>` build (`lib/index.js`) and the global `L`, so 3.0 (ESM only) needs its own demo setup.
 - `docs/`: README assets.
 
 ## Commands
@@ -29,7 +29,7 @@ npm test            # vitest run
 npm run typecheck   # tsc --noEmit
 npm run lint        # eslint + prettier --check
 npm run format      # prettier --write
-npm run build       # tsup -> dist/
+npm run build       # tsup -> lib/
 ```
 
 Run `lint`, `typecheck`, `test` and `build` before calling a change done; CI runs the same on Node 22 and 24 (the dev tools need Node 22+; the published package has no Node requirement).
@@ -42,8 +42,8 @@ Run `lint`, `typecheck`, `test` and `build` before calling a change done; CI run
 - Leaflet internals (`_map`) are accessed through the `MarkerInternals` cast in `src/index.ts`; keep that the only place.
 - Private slide state is prefixed `_slide` to avoid clashing with `L.Marker` internals.
 - `src/index.ts` must not touch `window` or other globals at import time. `sideEffects` in `package.json` lists only the `<script>` build.
-- Leaflet 1.9 has no `module` field, so bundlers load its UMD build; browsers without a bundler load `dist/leaflet-src.esm.js` through an import map.
-- After changing exports or the build, check both README browser examples locally against `dist/` (the `<script>` page with `index.global.js`, the import-map page with `index.js`) and confirm the marker slides.
+- Leaflet 1.9 has no `module` field, so bundlers load its UMD build; browsers without a bundler load Leaflet's `dist/leaflet-src.esm.js` through an import map.
+- After changing exports or the build, check both README browser examples locally against `lib/` (the `<script>` page with `index.js`, the import-map page with `index.mjs`) and confirm the marker slides.
 - Update `CHANGELOG.md` for every user-visible change.
 
 ## Roadmap
