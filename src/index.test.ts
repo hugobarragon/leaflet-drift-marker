@@ -109,4 +109,73 @@ describe("DriftMarker", () => {
   it("has no global side effects", () => {
     expect("DriftMarker" in window).toBe(false);
   });
+
+  it("jumps to the target when duration is 0", () => {
+    const marker = new DriftMarker([0, 0]).addTo(map);
+    const moveend = vi.fn();
+    marker.on("moveend", moveend);
+
+    expect(() => marker.slideTo([10, 10], { duration: 0 })).not.toThrow();
+    expect(marker.getLatLng()).toEqual(L.latLng(10, 10));
+    expect(moveend).toHaveBeenCalledTimes(1);
+  });
+
+  it("unlocks the map when the marker is removed mid-slide", () => {
+    const marker = new DriftMarker([0, 0]).addTo(map);
+    marker.slideTo([10, 10], { duration: 1000, keepAtCenter: true });
+    vi.advanceTimersByTime(500);
+
+    marker.remove();
+    finishSlide();
+
+    expect(map.dragging.enabled()).toBe(true);
+    expect(map.options.touchZoom).toBe(true);
+  });
+
+  it("keeps the map locked for a keepAtCenter slide started from moveend", () => {
+    const marker = new DriftMarker([0, 0]).addTo(map);
+    marker.once("moveend", () => {
+      marker.slideTo([20, 20], { duration: 1000, keepAtCenter: true });
+    });
+
+    marker.slideTo([10, 10], { duration: 1000, keepAtCenter: true });
+    finishSlide();
+    expect(map.dragging.enabled()).toBe(false);
+
+    finishSlide();
+    expect(marker.getLatLng()).toEqual(L.latLng(20, 20));
+    expect(map.dragging.enabled()).toBe(true);
+  });
+
+  it("restores each map interaction setting to its value before the slide", () => {
+    map.doubleClickZoom.disable();
+    map.options.scrollWheelZoom = "center";
+    const marker = new DriftMarker([0, 0]).addTo(map);
+
+    marker.slideTo([10, 10], { duration: 1000, keepAtCenter: true });
+    finishSlide();
+
+    expect(map.dragging.enabled()).toBe(true);
+    expect(map.doubleClickZoom.enabled()).toBe(false);
+    expect(map.options.scrollWheelZoom).toBe("center");
+    expect(map.options.touchZoom).toBe(true);
+  });
+
+  it("retargets cleanly when slideTo is called mid-slide", () => {
+    const marker = new DriftMarker([0, 0]).addTo(map);
+    marker.slideTo([10, 10], { duration: 1000, keepAtCenter: true });
+    vi.advanceTimersByTime(500);
+
+    marker.slideTo([-10, -10], { duration: 1000, keepAtCenter: true });
+    finishSlide();
+
+    expect(marker.getLatLng()).toEqual(L.latLng(-10, -10));
+    expect(map.dragging.enabled()).toBe(true);
+  });
+
+  it("slideCancel is harmless with no slide running", () => {
+    const marker = new DriftMarker([0, 0]).addTo(map);
+    expect(marker.slideCancel()).toBe(marker);
+    expect(map.dragging.enabled()).toBe(true);
+  });
 });
