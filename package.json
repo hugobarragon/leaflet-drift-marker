@@ -1,24 +1,16 @@
 {
   "name": "leaflet-drift-marker",
-  "version": "2.1.0",
+  "version": "3.0.0-beta.0",
   "private": false,
   "type": "module",
-  "description": "Leaflet plugin for animated markers that move smoothly to a new position. Ideal for live GPS and vehicle tracking. TypeScript, with ESM, CommonJS and CDN builds.",
-  "main": "./lib/index.cjs",
-  "module": "./lib/index.mjs",
+  "description": "Leaflet 2 plugin for animated markers that move smoothly to a new position. Ideal for live GPS and vehicle tracking. TypeScript, ESM only.",
+  "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./lib/index.d.ts",
-        "default": "./lib/index.mjs"
-      },
-      "require": {
-        "types": "./lib/index.d.cts",
-        "default": "./lib/index.cjs"
-      }
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
     },
-    "./lib/*": "./lib/*",
     "./package.json": "./package.json"
   },
   "unpkg": "./lib/index.js",
@@ -26,9 +18,7 @@
   "files": [
     "lib"
   ],
-  "sideEffects": [
-    "./lib/index.js"
-  ],
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hugobarragon/leaflet-drift-marker.git"
@@ -68,18 +58,20 @@
     "prepublishOnly": "npm run lint && npm run typecheck && npm test && npm run build"
   },
   "peerDependencies": {
-    "leaflet": ">=1.2.0 <2"
+    "leaflet": "^2.0.0-beta.5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/leaflet": "^1.9.23",
     "eslint": "^10.15.0",
     "jsdom": "^31.0.1",
-    "leaflet": "^1.9.4",
+    "leaflet": "2.0.0-beta.5",
     "prettier": "^3.10.1",
     "tsup": "^9.0.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.74.0",
     "vitest": "^5.1.2"
+  },
+  "publishConfig": {
+    "tag": "next"
   }
 }
