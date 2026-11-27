@@ -19,14 +19,21 @@ export type slideOptions = SlideOptions;
 // Leaflet keeps `_map` out of its public types.
 type MarkerInternals = { _map?: LeafletMap | null };
 
+interface MapInteraction {
+  dragging: boolean;
+  doubleClickZoom: boolean;
+  touchZoom: LeafletMap["options"]["touchZoom"];
+  scrollWheelZoom: LeafletMap["options"]["scrollWheelZoom"];
+}
+
 class DriftMarker extends Marker {
   private _slideToUntil = 0;
   private _slideToDuration = 1000;
   private _slideToLatLng: LatLng = latLng(0, 0);
   private _slideFromLatLng: LatLng = latLng(0, 0);
   private _slideKeepAtCenter = false;
-  // Map interaction state captured before a keepAtCenter slide; null when nothing to restore.
-  private _slideDraggingWasAllowed: boolean | null = null;
+  // Map interaction captured before a keepAtCenter slide; null when nothing to restore.
+  private _slideSavedInteraction: MapInteraction | null = null;
   private _slideFrame = 0;
   private _slideIsMoving = false;
 
@@ -55,9 +62,12 @@ class DriftMarker extends Marker {
     this._slideKeepAtCenter = !!options.keepAtCenter;
 
     if (this._slideKeepAtCenter) {
-      if (this._slideDraggingWasAllowed === null) {
-        this._slideDraggingWasAllowed = map.dragging.enabled();
-      }
+      this._slideSavedInteraction ??= {
+        dragging: map.dragging.enabled(),
+        doubleClickZoom: map.doubleClickZoom.enabled(),
+        touchZoom: map.options.touchZoom,
+        scrollWheelZoom: map.options.scrollWheelZoom,
+      };
       map.dragging.disable();
       map.doubleClickZoom.disable();
       map.options.touchZoom = "center";
@@ -78,25 +88,34 @@ class DriftMarker extends Marker {
     return this;
   }
 
+  onRemove(map: LeafletMap): this {
+    this.slideCancel();
+    return super.onRemove(map);
+  }
+
   private _onMove() {
     if (!this._slideIsMoving) this.slideCancel();
   }
 
   private _slideSetLatLng(latlng: LatLng) {
     this._slideIsMoving = true;
-    this.setLatLng(latlng);
-    this._slideIsMoving = false;
+    try {
+      this.setLatLng(latlng);
+    } finally {
+      this._slideIsMoving = false;
+    }
   }
 
   private _slideRestoreMap() {
     const map = this._slideMap;
-    if (map && this._slideDraggingWasAllowed) {
-      map.dragging.enable();
-      map.doubleClickZoom.enable();
-      map.options.touchZoom = true;
-      map.options.scrollWheelZoom = true;
-    }
-    this._slideDraggingWasAllowed = null;
+    const saved = this._slideSavedInteraction;
+    this._slideSavedInteraction = null;
+    if (!map || !saved) return;
+
+    if (saved.dragging) map.dragging.enable();
+    if (saved.doubleClickZoom) map.doubleClickZoom.enable();
+    map.options.touchZoom = saved.touchZoom;
+    map.options.scrollWheelZoom = saved.scrollWheelZoom;
   }
 
   private _slideTo() {
@@ -105,10 +124,11 @@ class DriftMarker extends Marker {
 
     const remaining = this._slideToUntil - performance.now();
 
-    if (remaining < 0) {
+    if (remaining <= 0) {
       this._slideSetLatLng(this._slideToLatLng);
-      this.fire("moveend");
+      // Restore first so a slide started from a moveend handler keeps its own lock.
       this._slideRestoreMap();
+      this.fire("moveend");
       return;
     }
 
