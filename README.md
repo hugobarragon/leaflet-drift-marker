@@ -1,71 +1,34 @@
-### :warning: From v2 up react project was splited to react-leaflet-drift-marker so this packages can be installed on vue,angular... and serve as base for other platforms.
-
 # leaflet-drift-marker
 
-[![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=plastic)](http://opensource.org/licenses/MIT)
-[![npm version](https://img.shields.io/badge/npm-v2.0.0-green.svg?style=plastic)](https://www.npmjs.com/package/leaflet-drift-marker)
+[![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+[![npm version](https://img.shields.io/npm/v/leaflet-drift-marker.svg)](https://www.npmjs.com/package/leaflet-drift-marker)
+[![CI](https://github.com/hugobarragon/leaflet-drift-marker/actions/workflows/ci.yml/badge.svg)](https://github.com/hugobarragon/leaflet-drift-marker/actions/workflows/ci.yml)
 
-| Support   | Tested |         |
-| --------- | ------ | ------- |
-| `leaflet` | 1.5.1  | &#9745; |
+![DriftMarker example](./docs/driftmarker.gif "example")
 
-!["IMG"](./docs/driftmarker.gif "example")
+A Leaflet marker that moves smoothly to a new position instead of jumping. Written in TypeScript and framework-agnostic, so it works with plain Leaflet, Vue, Angular and others. Ported from [Leaflet.Marker.SlideTo](https://gitlab.com/IvanSanchez/Leaflet.Marker.SlideTo).
 
-A plugin for leaflet in Typescript to use on react,vue... that allows a marker to move smoothly instead of jump to a new position. Reworked to typescript from [Leaflet.Marker.SlideTo!](https://gitlab.com/IvanSanchez/Leaflet.Marker.SlideTo)
+Using React? See [react-leaflet-drift-marker](https://github.com/hugobarragon/react-leaflet-drift-marker).
 
-### For more performance use canvas or webgl options!!
+Tested with Leaflet 1.9. For many markers, use Leaflet's canvas renderer for better performance.
 
 ## Installation
 
-### Install via NPM
-
 ```bash
-npm install --save leaflet-drift-marker
+npm install leaflet-drift-marker leaflet
 ```
 
-`leaflet-drift-marker` requires only `leaflet` as [`peerDependency`](https://docs.npmjs.com/files/package.json#peerdependencies)
-
-```bash
-npm install --save leaflet
-```
+`leaflet` is a [peer dependency](https://docs.npmjs.com/cli/configuring-npm/package-json#peerdependencies).
 
 ## Usage
 
-### Leaflet
-
-[![Edit leaflet_DriftMarker](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/static-bcdhq?fontsize=14)
-
-You can get the build file DriftMarker.js from releases or :
-
-```html
-<script>
-  <!-- will be fixed on next release -->
-  <!-- Include this script if exports does not exists on window or -->
-  <!-- the following error "ReferenceError: exports is not defined" -->
-  <!-- before the cdn import -->
-  var exports = {};
-</script>
-<script src="https://unpkg.com/leaflet-drift-marker@2.0.0/lib/index.js"></script>
-```
-
-Still supports all existing leaflet marker properties [check marker](https://leafletjs.com/reference-1.5.0.html#marker)
-
-This plugin implements two new methods:
-
-- `.slideTo(latlng, slideOptions)`
-  - `latlng` : LeafletLatLng , required
-  - `slideOptions` : Object , required
-    - `duration` : number , required
-    - `keepAtCenter` : Boolean , optional
-- `.slideCancel()`
-
-#### DriftMarker (with leaflet)
+### With a bundler
 
 ```javascript
 import DriftMarker from "leaflet-drift-marker";
-//var DriftMarker=require("leaflet-drift-marker")
+// or: const { DriftMarker } = require("leaflet-drift-marker");
 
-const marker = new DriftMarker([10, 10]);
+const marker = new DriftMarker([10, 10]).addTo(map);
 
 marker.slideTo([20, 20], {
   duration: 2000,
@@ -73,6 +36,35 @@ marker.slideTo([20, 20], {
 });
 ```
 
-# License
+### With a `<script>` tag
 
-MIT License
+Load Leaflet first; the script sets `window.DriftMarker`.
+
+```html
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-drift-marker@2.1.0/dist/index.global.js"></script>
+<script>
+  const marker = new DriftMarker([10, 10]).addTo(map);
+</script>
+```
+
+[![Edit leaflet_DriftMarker](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/static-bcdhq?fontsize=14)
+
+## API
+
+`DriftMarker` accepts everything [`L.Marker`](https://leafletjs.com/reference.html#marker) does, and adds:
+
+- `.slideTo(latlng, options)`: animates the marker to `latlng`. Fires `movestart` and `moveend`.
+  - `options.duration` (number, required): animation length in ms.
+  - `options.keepAtCenter` (boolean, optional): pans the map with the marker and locks dragging and zoom-to-point until the slide ends.
+- `.slideCancel()`: stops the current slide and restores map interaction.
+
+Calling `setLatLng` during a slide cancels the slide.
+
+## Contributing
+
+See [AGENTS.md](./AGENTS.md) for layout, commands and conventions.
+
+## License
+
+MIT
