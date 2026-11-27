@@ -1,21 +1,22 @@
 # Changelog
 
-## 3.0.0
-
-### Breaking
-
-- ESM only: ships `dist/index.js` (ES2020) with TypeScript types. `require()` is no longer supported.
-- `window.DriftMarker` is no longer set. In the browser, use `<script type="module">` with an import map (see README).
+## 2.1.0
 
 ### Fixed
 
-- Map dragging, double-click zoom, touch zoom and scroll-wheel zoom are re-enabled after a `keepAtCenter` slide ends.
+- Map dragging, double-click zoom, touch zoom and scroll-wheel zoom return to their previous settings after a `keepAtCenter` slide.
 - `slideCancel()` restores map interaction and returns `this`.
 - Calling `setLatLng` during a slide cancels the slide instead of being overwritten by it.
+- Removing the marker during a `keepAtCenter` slide no longer leaves the map locked.
+- A slide started from a `moveend` handler keeps its own `keepAtCenter` lock.
+- `duration: 0` moves the marker straight to the target instead of throwing.
 
 ### Changed
 
-- Adds a named `DriftMarker` export and a `SlideOptions` type.
+- Ships ESM (`dist/index.js`), CommonJS (`dist/index.cjs`) and a `<script>` build (`dist/index.global.js`) with TypeScript types. The `var exports = {}` workaround for `<script>` usage is no longer needed.
+- `window.DriftMarker` is set by the `<script>` build only; bundler imports no longer write to `window`.
+- Adds a named `DriftMarker` export and a `SlideOptions` type; `slideOptions` stays as a deprecated alias.
+- `peerDependencies` now caps Leaflet below 2.0.
 - Built with TypeScript 5 and tested with Leaflet 1.9.
 
 ## 2.0.0
