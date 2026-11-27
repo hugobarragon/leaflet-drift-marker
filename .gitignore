@@ -1,7 +1,7 @@
 node_modules
-dist
-lib
-coverage
+/dist
+/lib
+/coverage
 .claude/settings.local.json
 .vscode
 .DS_Store

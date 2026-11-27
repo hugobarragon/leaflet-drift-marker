@@ -8,13 +8,14 @@
 | ------- | -------------------- | -------------------- | --------------------------------------- |
 | 2.x     | 3.x (beta, ESM only) | Leaflet 2.0.0-beta.5 | `npm install leaflet-drift-marker@next` |
 | 1.x     | 2.x                  | Leaflet 1.9.4        | `npm install leaflet-drift-marker@2`    |
-| 1.x     | 1.x (legacy, React)  | react-leaflet 2      | `npm install leaflet-drift-marker@1`    |
 
 ![DriftMarker example](./docs/driftmarker.gif "example")
 
-**[Live demo](https://hugobarragon.github.io/leaflet-drift-marker/)** (2.x on Leaflet 1)
+**[Docs and live demo](https://hugobarragon.github.io/leaflet-drift-marker/)** · [2.x example on Leaflet 1](https://hugobarragon.github.io/leaflet-drift-marker/v2/)
 
 A Leaflet 2 marker that moves smoothly to a new position instead of jumping. Written in TypeScript and framework-agnostic, so it works with plain Leaflet, Vue, Angular and others. Ported from [Leaflet.Marker.SlideTo](https://gitlab.com/IvanSanchez/Leaflet.Marker.SlideTo).
+
+Using React? See [react-leaflet-drift-marker](https://github.com/hugobarragon/react-leaflet-drift-marker).
 
 ## Versions
 

@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>leaflet-drift-marker: animated markers for Leaflet 2</title>
+    <meta
+      name="description"
+      content="leaflet-drift-marker is a Leaflet 2 plugin for animated markers that move smoothly to a new position. Live demo, install and API docs. Ideal for live GPS and vehicle tracking."
+    />
+    <link rel="canonical" href="https://hugobarragon.github.io/leaflet-drift-marker/" />
+    <meta property="og:title" content="leaflet-drift-marker" />
+    <meta
+      property="og:description"
+      content="Animated Leaflet 2 markers that move smoothly to a new position."
+    />
+    <meta property="og:url" content="https://hugobarragon.github.io/leaflet-drift-marker/" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-beta.5/dist/leaflet.css" />
+    <style>
+      :root {
+        --bg: #ffffff;
+        --fg: #1b1f24;
+        --muted: #59636e;
+        --panel: #f6f8fa;
+        --border: #d1d9e0;
+        --accent: #0969da;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0d1117;
+          --fg: #e6edf3;
+          --muted: #9198a1;
+          --panel: #161b22;
+          --border: #30363d;
+          --accent: #4493f8;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font:
+          16px/1.6 system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+      }
+      a {
+        color: var(--accent);
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 2000;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      header nav {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 10px 16px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 20px;
+      }
+      header .brand {
+        font-weight: 600;
+        color: var(--fg);
+        text-decoration: none;
+        margin-right: auto;
+      }
+      header .tag {
+        font-size: 12px;
+        padding: 1px 8px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--muted);
+        margin-left: 6px;
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 24px 16px 64px;
+      }
+      h1 {
+        font-size: 1.9rem;
+        margin: 0 0 4px;
+      }
+      h2 {
+        font-size: 1.3rem;
+        margin: 40px 0 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+      }
+      h3 {
+        font-size: 1.05rem;
+        margin: 24px 0 8px;
+      }
+      p,
+      li {
+        color: var(--muted);
+      }
+      #map {
+        height: 420px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 20px;
+        align-items: center;
+        padding: 12px 0;
+      }
+      button,
+      select {
+        font: inherit;
+        padding: 6px 14px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--panel);
+        color: var(--fg);
+        cursor: pointer;
+      }
+      pre {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        overflow-x: auto;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      code {
+        font-size: 0.92em;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 15px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Main">
+        <a class="brand" href="index.html"
+          >leaflet-drift-marker<span class="tag">v3 · Leaflet 2</span></a
+        >
+        <a href="v2/index.html">v2 example (Leaflet 1)</a>
+        <a href="https://github.com/hugobarragon/leaflet-drift-marker">GitHub</a>
+        <a href="https://www.npmjs.com/package/leaflet-drift-marker">npm</a>
+        <a href="https://github.com/hugobarragon/react-leaflet-drift-marker">React</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>leaflet-drift-marker</h1>
+      <p>
+        Animated markers for Leaflet 2 that move smoothly to a new position instead of jumping.
+        Click the map to send the marker there, or let it drive the route.
+      </p>
+
+      <div id="map" role="application" aria-label="Map with an animated marker"></div>
+
+      <div class="controls">
+        <button id="play" type="button">Pause</button>
+        <label><input id="follow" type="checkbox" /> Follow marker (keepAtCenter)</label>
+        <label>
+          Speed
+          <select id="speed">
+            <option value="2000">Slow</option>
+            <option value="1000" selected>Normal</option>
+            <option value="400">Fast</option>
+          </select>
+        </label>
+      </div>
+
+      <h2 id="versions">Versions</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Leaflet</th>
+              <th>leaflet-drift-marker</th>
+              <th>Install</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2.x</td>
+              <td>3.x (beta, ESM only)</td>
+              <td><code>npm install leaflet-drift-marker@next</code></td>
+            </tr>
+            <tr>
+              <td>1.x</td>
+              <td>2.x (<a href="v2/index.html">example</a>)</td>
+              <td><code>npm install leaflet-drift-marker@2</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="install">Install</h2>
+      <pre><code>npm install leaflet-drift-marker@next leaflet@beta</code></pre>
+
+      <h2 id="usage">Usage</h2>
+      <h3>With a bundler</h3>
+      <pre><code>import { LeafletMap, TileLayer } from "leaflet";
+import DriftMarker from "leaflet-drift-marker";
+
+const map = new LeafletMap("map").setView([0, 0], 4);
+new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+const marker = new DriftMarker([10, 10]).addTo(map);
+
+marker.slideTo([20, 20], {
+  duration: 2000,
+  keepAtCenter: true,
+});</code></pre>
+
+      <h3>In the browser without a bundler</h3>
+      <p>
+        Use a module script and an import map so <code>leaflet</code> resolves to Leaflet 2's ESM
+        build.
+      </p>
+      <pre><code>&lt;link rel="stylesheet" href="https://unpkg.com/leaflet@2.0.0-beta.5/dist/leaflet.css" /&gt;
+&lt;script type="importmap"&gt;
+  {
+    "imports": {
+      "leaflet": "https://unpkg.com/leaflet@2.0.0-beta.5/dist/leaflet.js",
+      "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@next/lib/index.js"
+    }
+  }
+&lt;/script&gt;
+
+&lt;div id="map" style="height: 400px"&gt;&lt;/div&gt;
+&lt;script type="module"&gt;
+  import { LeafletMap, TileLayer } from "leaflet";
+  import DriftMarker from "leaflet-drift-marker";
+
+  const map = new LeafletMap("map").setView([0, 0], 4);
+  new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+  new DriftMarker([0, 0]).addTo(map).slideTo([10, 10], { duration: 1000 });
+&lt;/script&gt;</code></pre>
+
+      <h2 id="api">API</h2>
+      <p>
+        <code>DriftMarker</code> accepts everything Leaflet's
+        <a href="https://leafletjs.com/reference.html#marker"><code>Marker</code></a> does, and
+        adds:
+      </p>
+      <ul>
+        <li>
+          <code>.slideTo(latlng, options)</code>: animates the marker to <code>latlng</code>. Fires
+          <code>movestart</code> and <code>moveend</code>.
+          <ul>
+            <li><code>options.duration</code> (number, required): animation length in ms.</li>
+            <li>
+              <code>options.keepAtCenter</code> (boolean, optional): pans the map with the marker
+              and locks dragging and zoom-to-point until the slide ends.
+            </li>
+          </ul>
+        </li>
+        <li><code>.slideCancel()</code>: stops the current slide and restores map interaction.</li>
+      </ul>
+      <p>
+        Calling <code>setLatLng</code> or removing the marker during a slide cancels the slide. A
+        <code>duration</code> of 0 moves the marker straight to the target.
+      </p>
+
+      <h2 id="upgrading">Upgrading from 2.x</h2>
+      <ul>
+        <li>Upgrade to Leaflet 2 first; 3.x does not run on Leaflet 1.</li>
+        <li>
+          ESM only: <code>require()</code> and the <code>&lt;script&gt;</code> build
+          (<code>window.DriftMarker</code>) are gone. Use <code>import</code>.
+        </li>
+        <li>
+          The deprecated <code>slideOptions</code> type is removed; use <code>SlideOptions</code>.
+        </li>
+      </ul>
+    </main>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "https://unpkg.com/leaflet@2.0.0-beta.5/dist/leaflet.js",
+          "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@next/lib/index.js"
+        }
+      }
+    </script>
+    <script type="module">
+      import { LeafletMap, Polygon, TileLayer } from "leaflet";
+      import DriftMarker from "leaflet-drift-marker";
+
+      const route = [
+        [38.7071, -9.1355],
+        [38.7107, -9.1366],
+        [38.7139, -9.1394],
+        [38.7169, -9.1399],
+        [38.7205, -9.1452],
+        [38.7223, -9.1393],
+        [38.7186, -9.1336],
+        [38.7131, -9.131],
+        [38.7098, -9.133],
+      ];
+
+      const map = new LeafletMap("map").fitBounds(route, { padding: [30, 30] });
+      new TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors",
+      }).addTo(map);
+      new Polygon(route, { color: "#0969da", weight: 3, fill: false, dashArray: "6 6" }).addTo(map);
+
+      const marker = new DriftMarker(route[0]).addTo(map);
+      const playButton = document.getElementById("play");
+      const follow = document.getElementById("follow");
+      const speed = document.getElementById("speed");
+
+      let playing = true;
+      let next = 1;
+
+      function driveToNext() {
+        if (!playing) return;
+        marker.slideTo(route[next], {
+          duration: Number(speed.value),
+          keepAtCenter: follow.checked,
+        });
+        next = (next + 1) % route.length;
+      }
+
+      // Each slide starts the next one when it ends.
+      marker.on("moveend", driveToNext);
+
+      playButton.addEventListener("click", () => {
+        playing = !playing;
+        playButton.textContent = playing ? "Pause" : "Play";
+        if (playing) driveToNext();
+        else marker.slideCancel();
+      });
+
+      map.on("click", (e) => {
+        playing = false;
+        playButton.textContent = "Play";
+        marker.slideTo(e.latlng, { duration: Number(speed.value), keepAtCenter: follow.checked });
+      });
+
+      window.demo = { map, marker };
+      driveToNext();
+    </script>
+  </body>
+</html>
