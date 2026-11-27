@@ -10,7 +10,7 @@ A Leaflet marker that moves smoothly to a new position instead of jumping. Writt
 
 Using React? See [react-leaflet-drift-marker](https://github.com/hugobarragon/react-leaflet-drift-marker).
 
-Tested with Leaflet 1.9. For many markers, use Leaflet's canvas renderer for better performance.
+Works with Leaflet 1.x and is tested with Leaflet 1.9. For many markers, use Leaflet's canvas renderer for better performance.
 
 ## Installation
 
@@ -24,10 +24,9 @@ npm install leaflet-drift-marker leaflet
 
 ### With a bundler
 
-The package is ESM only.
-
 ```javascript
 import DriftMarker from "leaflet-drift-marker";
+// CommonJS: const { DriftMarker } = require("leaflet-drift-marker");
 
 const marker = new DriftMarker([10, 10]).addTo(map);
 
@@ -37,56 +36,58 @@ marker.slideTo([20, 20], {
 });
 ```
 
-### In the browser without a bundler
+### With a `<script>` tag
 
-Use a module script and an import map so `leaflet` resolves to Leaflet's ESM build. A complete page:
+Load Leaflet first; the script reads the global `L` and sets `window.DriftMarker`.
 
 ```html
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <style>
-      #map {
-        height: 400px;
-      }
-    </style>
-    <script type="importmap">
-      {
-        "imports": {
-          "leaflet": "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js",
-          "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@3.0.0/dist/index.js"
-        }
-      }
-    </script>
-  </head>
-  <body>
-    <div id="map"></div>
-    <script type="module">
-      import * as L from "leaflet";
-      import DriftMarker from "leaflet-drift-marker";
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-drift-marker@2.1.0/dist/index.global.js"></script>
 
-      const map = L.map("map").setView([0, 0], 4);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors",
-      }).addTo(map);
+<div id="map" style="height: 400px"></div>
+<script>
+  const map = L.map("map").setView([0, 0], 4);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors",
+  }).addTo(map);
 
-      const marker = new DriftMarker([0, 0]).addTo(map);
-      marker.slideTo([10, 10], { duration: 1000 });
-    </script>
-  </body>
-</html>
+  const marker = new DriftMarker([0, 0]).addTo(map);
+  marker.slideTo([10, 10], { duration: 1000 });
+</script>
 ```
 
-Older Leaflet plugins that read a global `L` need it set first: `window.L = L;`, then load the plugin with `await import(...)`.
-
-### Upgrading from 2.x
-
-- `require("leaflet-drift-marker")` no longer works; use `import`.
-- `window.DriftMarker` is no longer set; import it instead.
-
 [![Edit leaflet_DriftMarker](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/static-bcdhq?fontsize=14)
+
+### With ES modules in the browser
+
+Use a module script and an import map so `leaflet` resolves to Leaflet's ESM build (Leaflet 1.9).
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script type="importmap">
+  {
+    "imports": {
+      "leaflet": "https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.esm.js",
+      "leaflet-drift-marker": "https://unpkg.com/leaflet-drift-marker@2.1.0/dist/index.js"
+    }
+  }
+</script>
+
+<div id="map" style="height: 400px"></div>
+<script type="module">
+  import * as L from "leaflet";
+  import DriftMarker from "leaflet-drift-marker";
+
+  const map = L.map("map").setView([0, 0], 4);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors",
+  }).addTo(map);
+
+  const marker = new DriftMarker([0, 0]).addTo(map);
+  marker.slideTo([10, 10], { duration: 1000 });
+</script>
+```
 
 ## API
 
@@ -97,7 +98,7 @@ Older Leaflet plugins that read a global `L` need it set first: `window.L = L;`,
   - `options.keepAtCenter` (boolean, optional): pans the map with the marker and locks dragging and zoom-to-point until the slide ends.
 - `.slideCancel()`: stops the current slide and restores map interaction.
 
-Calling `setLatLng` during a slide cancels the slide.
+Calling `setLatLng` or removing the marker during a slide cancels the slide. A `duration` of 0 moves the marker straight to the target.
 
 ## Contributing
 
