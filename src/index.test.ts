@@ -178,4 +178,44 @@ describe("DriftMarker", () => {
     expect(marker.slideCancel()).toBe(marker);
     expect(map.dragging.enabled()).toBe(true);
   });
+
+  it("treats an invalid duration as 0 and leaves the map unlocked", () => {
+    const marker = new DriftMarker([0, 0]).addTo(map);
+
+    expect(() => marker.slideTo([10, 10], { duration: NaN, keepAtCenter: true })).not.toThrow();
+    expect(marker.getLatLng()).toEqual(L.latLng(10, 10));
+    expect(map.dragging.enabled()).toBe(true);
+  });
+
+  it("unlocks the map when a keepAtCenter slide is retargeted without it", () => {
+    const marker = new DriftMarker([0, 0]).addTo(map);
+    marker.slideTo([10, 10], { duration: 1000, keepAtCenter: true });
+    vi.advanceTimersByTime(500);
+
+    marker.slideTo([-10, -10], { duration: 1000 });
+    expect(map.dragging.enabled()).toBe(true);
+    expect(map.options.touchZoom).toBe(true);
+
+    finishSlide();
+    expect(marker.getLatLng()).toEqual(L.latLng(-10, -10));
+  });
+
+  it("unlocks the original map when the marker moves to another map mid-slide", () => {
+    const otherContainer = document.createElement("div");
+    document.body.appendChild(otherContainer);
+    const otherMap = L.map(otherContainer).setView([0, 0], 5);
+    otherMap.doubleClickZoom.disable();
+
+    const marker = new DriftMarker([0, 0]).addTo(map);
+    marker.slideTo([10, 10], { duration: 1000, keepAtCenter: true });
+    vi.advanceTimersByTime(500);
+
+    marker.addTo(otherMap);
+    finishSlide();
+
+    expect(map.dragging.enabled()).toBe(true);
+    expect(map.doubleClickZoom.enabled()).toBe(true);
+    expect(otherMap.doubleClickZoom.enabled()).toBe(false);
+    otherMap.remove();
+  });
 });
