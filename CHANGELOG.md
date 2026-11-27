@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.0.0-beta.0
+
+### Breaking
+
+- Requires Leaflet 2 (`^2.0.0-beta.5`); Leaflet 1 stays on 2.x.
+- ESM only: ships `lib/index.js` (ES2022) with TypeScript types. CommonJS and the `<script>` build are removed, and `window.DriftMarker` is no longer set.
+- Removes the deprecated `slideOptions` type; use `SlideOptions`.
+
+### Changed
+
+- Uses Leaflet 2's API: `LatLng` instead of `latLng()`, native `requestAnimationFrame`, and `pinchZoom` instead of `touchZoom` for `keepAtCenter`.
+- Published under the npm `next` tag while Leaflet 2 is in beta.
+
 ## 2.1.0
 
 ### Fixed
