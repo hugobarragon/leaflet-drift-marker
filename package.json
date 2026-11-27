@@ -49,9 +49,6 @@
     "url": "https://github.com/hugobarragon/leaflet-drift-marker/issues"
   },
   "homepage": "https://github.com/hugobarragon/leaflet-drift-marker#readme",
-  "engines": {
-    "node": ">=18"
-  },
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
