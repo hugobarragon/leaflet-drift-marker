@@ -6,6 +6,8 @@
 
 ![DriftMarker example](./docs/driftmarker.gif "example")
 
+**[Live demo](https://hugobarragon.github.io/leaflet-drift-marker/)**
+
 A Leaflet marker that moves smoothly to a new position instead of jumping. Written in TypeScript and framework-agnostic, so it works with plain Leaflet, Vue, Angular and others. Ported from [Leaflet.Marker.SlideTo](https://gitlab.com/IvanSanchez/Leaflet.Marker.SlideTo).
 
 Using React? See [react-leaflet-drift-marker](https://github.com/hugobarragon/react-leaflet-drift-marker).
