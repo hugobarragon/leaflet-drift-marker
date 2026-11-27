@@ -59,6 +59,7 @@
   "homepage": "https://github.com/hugobarragon/leaflet-drift-marker#readme",
   "scripts": {
     "build": "tsup",
+    "site": "npm run build && rm -rf .site && mkdir .site && cp demo/index.html .site/ && cp -r dist .site/dist",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
