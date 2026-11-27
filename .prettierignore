@@ -2,4 +2,3 @@ dist
 lib
 coverage
 package-lock.json
-.site
