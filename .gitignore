@@ -1,10 +1,8 @@
-# Node 
 node_modules
+dist
 lib
-# Build assets
-public/build
-public/index.html
-
-# IDE
-.alm
+coverage
+.claude/settings.local.json
 .vscode
+.DS_Store
+.playwright-mcp
